@@ -1,0 +1,337 @@
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #f8fafc;
+    --accent: #ef4444;
+    --dino: #fbbf24;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 40px 20px;
+    overflow-x: hidden;
+}
+
+#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.game-container {
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+h1 { text-align: center; margin-bottom: 30px; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
+
+.input-wrapper {
+    display: flex;
+    align-items: flex-start; /* Keeps suffix at the top */
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 15px;
+    position: relative;
+    min-height: 24px; /* Gives it a consistent starting size */
+}
+
+#emailInput {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    color: var(--text);
+    flex: 1;
+    min-width: 200px;
+    padding: 0;           /* Remove internal padding to keep it slim */
+    margin: 0;
+    resize: none;
+    overflow: hidden;
+    font-family: inherit;
+    line-height: 1.2;     /* Tighter line height for a single-line look */
+    word-break: break-all;
+    height: 1.5rem;       /* Force it to start as one line */
+}
+
+.sticky-elements {
+    position: sticky;
+    top: 5px; /* Keeps @gmail.com near the top line */
+    right: 0;
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    padding-left: 10px;
+    z-index: 2;
+}
+
+.suffix { color: #64748b; font-weight: bold; margin-right: 10px; white-space: nowrap; }
+
+#charCount {
+    background: #334155;
+    color: #94a3b8;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+#rulesContainer {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.rule-card {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(8px);
+    border-left: 5px solid var(--accent);
+    padding: 18px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+}
+
+.rule-card.pinned {
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    background: rgba(30, 41, 59, 0.98);
+}
+
+#dinoWarning {
+    background: rgba(69, 26, 3, 0.9);
+    border: 1px solid #92400e;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.dino-header { color: var(--dino); font-weight: bold; font-size: 0.9rem; text-align: center; margin-bottom: 8px; }
+.progress-bar { background: #1e293b; height: 10px; border-radius: 5px; overflow: hidden; }
+#progressFill { background: var(--dino); height: 100%; width: 100%; transition: width 1s linear; }
+
+/* --- THE WIN SCREEN OVERLAY --- */
+#winScreen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centers it perfectly */
+    background: rgba(15, 23, 42, 0.98);
+    border: 2px solid #22c55e;
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 0 80px rgba(34, 197, 94, 0.2);
+    backdrop-filter: blur(15px); /* Blurs the game behind it */
+    min-width: 300px;
+}
+
+#winScreen h2 {
+    font-size: 2.5rem;
+    color: #22c55e;
+    margin: 0 0 10px 0;
+    text-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+#winScreen p {
+    color: #94a3b8;
+    margin-bottom: 25px;
+}
+
+/* --- THE STYLISH PLAY AGAIN BUTTON --- */
+#winScreen button {
+    background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    outline: none;
+}
+
+#winScreen button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.5);
+    filter: brightness(1.1);
+}
+
+#winScreen button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Optional: Fade in animation when you win */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -45%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+#winScreen:not(.hidden) {
+    display: block;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+#resetScreen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 23, 42, 0.98);
+    border: 2px solid #ef4444;
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 0 80px rgba(239, 68, 68, 0.3);
+    backdrop-filter: blur(15px);
+    min-width: 320px;
+}
+
+#resetScreen h2 {
+    font-size: 2.4rem;
+    color: #ef4444;
+    margin: 0 0 10px 0;
+}
+
+#resetScreen p {
+    color: #94a3b8;
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+#resetScreen button {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1rem;
+    font-weight: 800;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#resetScreen button:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+#hiddenPowerCode {
+    position: fixed;
+    color: #a1a1aa;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    z-index: 9997;
+    user-select: none;
+    pointer-events: none;
+    display: none;
+    opacity: 0.65;
+    background: rgba(255,255,255,0.05);
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+#darkness {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9998;
+    pointer-events: none;
+    display: none;
+}
+
+.flashlight-active {
+    display: block !important;
+    background: radial-gradient(
+        circle 120px at var(--cursor-x) var(--cursor-y),
+        transparent 10%,
+        rgba(0,0,0,0.90) 70%,
+        rgba(0,0,0,0.98) 100%
+    ) !important;
+}
+
+#rulesContainer,
+#dinoWarning,
+h1,
+.input-wrapper {
+    position: relative;
+    z-index: 10000;
+}
+
+#winScreen {
+    z-index: 10000;
+}
+
+#finalRuleScreen{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(6px);
+    z-index:9999;
+}
+
+#finalPanel{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:#111827;
+    border:2px solid #22c55e;
+    padding:40px;
+    border-radius:22px;
+    text-align:center;
+    min-width:420px;
+    box-shadow:0 0 50px rgba(34,197,94,.25);
+}
+
+#finalPanel h2{
+    margin:0 0 15px;
+    font-size:2rem;
+    color:#22c55e;
+}
+
+#finalHintText{
+    color:#cbd5e1;
+    margin-bottom:30px;
+}
+
+#winBtn{
+    position:absolute;
+    z-index: 10000;
+    left:50%;
+    top:72%;
+    transform:translateX(-50%);
+    padding:18px 35px;
+    border:none;
+    border-radius:16px;
+    font-size:1.1rem;
+    font-weight:900;
+    letter-spacing:2px;
+    cursor:pointer;
+    color:white;
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    box-shadow:0 0 30px rgba(34,197,94,.5);
+    transition:.15s ease;
+}
+
+.hidden { display: none; }

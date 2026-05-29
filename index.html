@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Email Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    <div class="game-container">
+        <h1>The Email Game</h1>
+
+        <div class="input-section">
+
+            <div class="input-wrapper" id="scrollWrapper">
+
+                <!-- Inside the input-wrapper -->
+                    <textarea id="emailInput" placeholder="Type your email..." spellcheck="false" autocomplete="off" rows="1"></textarea>
+
+                <div class="sticky-elements">
+
+                    <span class="suffix">@gmail.com</span>
+
+                    <div id="charCount">0</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div id="dinoWarning" class="hidden">
+
+            <div id="dinoHeaderText" class="dino-header">🦖 THE DINO ATE 5 CHARACTERS! Fix the broken rules before he eats another 5!</div>
+
+            <div class="progress-bar"><div id="progressFill"></div></div>
+
+        </div>
+
+
+
+        <div id="rulesContainer"></div>
+
+
+
+        <div id="winScreen" class="hidden">
+
+            <h2>🎉 YOU WIN!</h2>
+            <p>The email is secure. The Dino is safe and fed.</p>
+            <button onclick="location.reload()">Play Again</button>
+        </div>
+    </div>
+
+    <div id="resetScreen" class="hidden">
+        <h2>💀 GAME RESETED</h2>
+        <p id="resetReason">The Dino was disappointed.</p>
+        <button onclick="location.reload()">Try Again</button>
+    </div>
+
+    <div id="finalRuleScreen" class="hidden">
+    <div id="finalPanel">
+        <h2>🏆 FINAL RULE</h2>
+        <p id="finalHintText">Just click the button to win.</p>
+
+        <button id="winButton">CLAIM VICTORY</button>
+    </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <div id="darkness"></div>
+    <div id="hiddenPowerCode"></div>
+</body>
+</html>
