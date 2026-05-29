@@ -127,10 +127,10 @@ const rules = [
     },
 
     {
-        id: 12, desc: "❌ Your digits must add up to exactly 39.", check: (s) => {
+        id: 12, desc: "❌ Your digits must add up to exactly 45.", check: (s) => {
             const digits = s.match(/\d/g) || [];
             currentSum = digits.reduce((a, b) => a + parseInt(b), 0);
-            return currentSum === 39;
+            return currentSum === 45;
         }
     },
     { id: 13, desc: "❌ The 🦖 needs a digit exactly 3 spaces away.", check: (s) => { const chars = [...s]; const idx = chars.indexOf('🦖'); if (idx === -1) return false; const neighbors = [idx - 3, idx + 3]; return neighbors.some(nIdx => { if (nIdx < 0 || nIdx >= chars.length) return false; if (!/\d/.test(chars[nIdx])) return false; const step = nIdx > idx ? 1 : -1; return !/\d/.test(chars[idx + step]) && !/\d/.test(chars[idx + (step * 2)]); }); } },
