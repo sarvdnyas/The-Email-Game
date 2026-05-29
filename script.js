@@ -881,7 +881,7 @@ function startFinalButton() {
 
         if (dist < 130) {
             rule28StruggleCount++;
-            moveBtn(e.clientX, e.clientY);;
+            moveBtn();;
 
             // 💡 delayed hint (after struggle)
             if (rule28StruggleCount >= 13 && !rule28HintShown) {
@@ -898,7 +898,7 @@ function startFinalButton() {
             btn.remove();
             validate();
         } else {
-            moveBtn(e.clientX, e.clientY);;
+            moveBtn();;
         }
     };
 }
