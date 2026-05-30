@@ -851,7 +851,7 @@ function startFinalButton() {
     btn.style.transform = "translate(-50%, -50%)";
     btn.style.transition = "left 0.25s cubic-bezier(.22,.9,.3,1), top 0.25s cubic-bezier(.22,.9,.3,1), transform 0.12s ease";
 
-    moveBtn(e.clientX, e.clientY);;
+    moveBtn();
 
     // SHIFT lock (same as your test)
     document.addEventListener("keydown", e => {
@@ -881,7 +881,7 @@ function startFinalButton() {
 
         if (dist < 130) {
             rule28StruggleCount++;
-            moveBtn();;
+            moveBtn();
 
             // 💡 delayed hint (after struggle)
             if (rule28StruggleCount >= 13 && !rule28HintShown) {
