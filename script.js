@@ -514,7 +514,7 @@ function validate() {
         // Find the specific rule the player is currently trying to solve
         const currentRule = rules.find(r => r.id === maxUnlockedRule);
 
-        if (maxUnlockedRule === 28) {
+        if (dinoPhase && maxUnlockedRule === 28 && passedAll) {
             startFinalButton();
         }
 
@@ -533,9 +533,11 @@ function validate() {
     }
 
     // ===== Win =====
-    if (dinoPhase && maxUnlockedRule > 28 && passedAll) {
-        winGame();
+    if (window.finalButtonClicked) {
+    winGame();
+    return;
     }
+    
 }
 
 function render(brokenRules) {
