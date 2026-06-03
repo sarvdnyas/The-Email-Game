@@ -510,25 +510,24 @@ function validate() {
 
     // ===== Progress Rules 19-28 =====
     // ===== Progress Rules 19-28 =====
-    if (dinoPhase && maxUnlockedRule >= 19) {
-        // Find the specific rule the player is currently trying to solve
-        const currentRule = rules.find(r => r.id === maxUnlockedRule);
+   if (dinoPhase && maxUnlockedRule >= 19) {
+    const currentRule = rules.find(r => r.id === maxUnlockedRule);
 
-        if (dinoPhase && maxUnlockedRule === 28) {
-            startFinalButton();
-        }
-
-        if (currentRule && currentRule.check(val)) {
-    maxUnlockedRule++;
-
-    if (currentRule.id === 21) {
-        stopRule21();
-        rule21Locked = true;
+    if (maxUnlockedRule === 28) {
+        startFinalButton();
     }
 
-    validate();
-    return;
-}
+    if (currentRule && currentRule.check(val)) {
+        maxUnlockedRule++;
+
+        if (currentRule.id === 21) {
+            stopRule21();
+            rule21Locked = true;
+        }
+
+        validate();
+        return;
+    }
 }
 
     // ===== Win =====
