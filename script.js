@@ -514,18 +514,21 @@ function validate() {
         // Find the specific rule the player is currently trying to solve
         const currentRule = rules.find(r => r.id === maxUnlockedRule);
 
-        if (dinoPhase && maxUnlockedRule === 28 && passedAll) {
+        if (dinoPhase && maxUnlockedRule === 28) {
             startFinalButton();
         }
 
-        if (currentRule && currentRule.check(val)) {
-            maxUnlockedRule++; // Move to next rule immediately
+        if (currentRule && currentRule.check(val) && passedAll) {
+            maxUnlockedRule++;
 
-            // If we just finished Rule 21, ensure keyboard is restored
             if (currentRule.id === 21) {
                 stopRule21();
                 rule21Locked = true;
             }
+
+    validate();
+    return;
+}
 
             validate(); // Refresh to show Rule 22 (or the next one)
             return;
@@ -545,15 +548,16 @@ function render(brokenRules) {
 
     // 1. Identify the "Current" rule the player is actually on
     // We subtract 1 because maxUnlockedRule is always the NEXT rule
-    const currentActiveId = maxUnlockedRule - (maxUnlockedRule > rules.length ? 1 : 0);
+    const currentActiveId = maxUnlockedRule;
 
     // 2. Separate the broken rules into "Current" and "Old"
     const currentRuleObj = brokenRules.find(r => r.id === currentActiveId);
     const otherBrokenRules = brokenRules.filter(r => r.id !== currentActiveId);
 
     // 3. Always show the Current Rule at the top (if it's broken)
-    if (currentRuleObj) {
+    if (currentRuleObj && otherBrokenRules.length === 0) {
         renderCard(currentRuleObj, true);
+    }
     } else if (maxUnlockedRule <= rules.length) {
         // Even if the current rule is technically "satisfied", 
         // we might want to keep it there or handle the transition.
