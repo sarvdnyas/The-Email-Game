@@ -518,22 +518,18 @@ function validate() {
             startFinalButton();
         }
 
-        if (currentRule && currentRule.check(val) && passedAll) {
-            maxUnlockedRule++;
+        if (currentRule && currentRule.check(val)) {
+    maxUnlockedRule++;
 
-            if (currentRule.id === 21) {
-                stopRule21();
-                rule21Locked = true;
-            }
+    if (currentRule.id === 21) {
+        stopRule21();
+        rule21Locked = true;
+    }
 
     validate();
     return;
 }
-
-            validate(); // Refresh to show Rule 22 (or the next one)
-            return;
-        }
-    }
+}
 
     // ===== Win =====
     if (window.finalButtonClicked) {
@@ -546,29 +542,24 @@ function validate() {
 function render(brokenRules) {
     rulesContainer.innerHTML = "";
 
-    // 1. Identify the "Current" rule the player is actually on
-    // We subtract 1 because maxUnlockedRule is always the NEXT rule
-    const currentActiveId = maxUnlockedRule;
+    const currentActiveId =
+        maxUnlockedRule - (maxUnlockedRule > rules.length ? 1 : 0);
 
-    // 2. Separate the broken rules into "Current" and "Old"
-    const currentRuleObj = brokenRules.find(r => r.id === currentActiveId);
-    const otherBrokenRules = brokenRules.filter(r => r.id !== currentActiveId);
+    const currentRuleObj =
+        brokenRules.find(r => r.id === currentActiveId);
 
-    // 3. Always show the Current Rule at the top (if it's broken)
-    if (currentRuleObj && otherBrokenRules.length === 0) {
+    const otherBrokenRules =
+        brokenRules.filter(r => r.id !== currentActiveId);
+
+    if (currentRuleObj) {
         renderCard(currentRuleObj, true);
     }
-    } else if (maxUnlockedRule <= rules.length) {
-        // Even if the current rule is technically "satisfied", 
-        // we might want to keep it there or handle the transition.
-        // For now, we focus on broken rules.
-    }
 
-    // 4. Show all other broken rules (like Rule 8, Rule 12) BELOW it
-    // Sorted by ID descending so the most recent ones are higher up
-    otherBrokenRules.sort((a, b) => b.id - a.id).forEach(rule => {
-        renderCard(rule, false);
-    });
+    otherBrokenRules
+        .sort((a, b) => b.id - a.id)
+        .forEach(rule => {
+            renderCard(rule, false);
+        });
 }
 
 function renderCard(rule, isPinned) {
