@@ -510,55 +510,64 @@ function validate() {
 
     // ===== Progress Rules 19-28 =====
     // ===== Progress Rules 19-28 =====
-   if (dinoPhase && maxUnlockedRule >= 19) {
-    const currentRule = rules.find(r => r.id === maxUnlockedRule);
+    if (dinoPhase && maxUnlockedRule >= 19) {
+        // Find the specific rule the player is currently trying to solve
+        const currentRule = rules.find(r => r.id === maxUnlockedRule);
 
-    if (maxUnlockedRule === 28) {
-        startFinalButton();
-    }
+       const oldBrokenRules = currentBroken.filter(r => r.id < 28);
 
-    if (currentRule && currentRule.check(val)) {
-        maxUnlockedRule++;
-
-        if (currentRule.id === 21) {
-            stopRule21();
-            rule21Locked = true;
-        }
-
-        validate();
-        return;
-    }
+if (
+    maxUnlockedRule === 28 &&
+    oldBrokenRules.length === 0
+) {
+    startFinalButton();
 }
 
-    // ===== Win =====
-    if (window.finalButtonClicked) {
-    winGame();
-    return;
+        if (currentRule && currentRule.check(val)) {
+            maxUnlockedRule++; // Move to next rule immediately
+
+            // If we just finished Rule 21, ensure keyboard is restored
+            if (currentRule.id === 21) {
+                stopRule21();
+                rule21Locked = true;
+            }
+
+            validate(); // Refresh to show Rule 22 (or the next one)
+            return;
+        }
     }
-    
+
+    // ===== Win =====
+    if (dinoPhase && maxUnlockedRule > 28 && passedAll) {
+        winGame();
+    }
 }
 
 function render(brokenRules) {
     rulesContainer.innerHTML = "";
 
-    const currentActiveId =
-        maxUnlockedRule - (maxUnlockedRule > rules.length ? 1 : 0);
+    // 1. Identify the "Current" rule the player is actually on
+    // We subtract 1 because maxUnlockedRule is always the NEXT rule
+    const currentActiveId = maxUnlockedRule - (maxUnlockedRule > rules.length ? 1 : 0);
 
-    const currentRuleObj =
-        brokenRules.find(r => r.id === currentActiveId);
+    // 2. Separate the broken rules into "Current" and "Old"
+    const currentRuleObj = brokenRules.find(r => r.id === currentActiveId);
+    const otherBrokenRules = brokenRules.filter(r => r.id !== currentActiveId);
 
-    const otherBrokenRules =
-        brokenRules.filter(r => r.id !== currentActiveId);
-
+    // 3. Always show the Current Rule at the top (if it's broken)
     if (currentRuleObj) {
         renderCard(currentRuleObj, true);
+    } else if (maxUnlockedRule <= rules.length) {
+        // Even if the current rule is technically "satisfied", 
+        // we might want to keep it there or handle the transition.
+        // For now, we focus on broken rules.
     }
 
-    otherBrokenRules
-        .sort((a, b) => b.id - a.id)
-        .forEach(rule => {
-            renderCard(rule, false);
-        });
+    // 4. Show all other broken rules (like Rule 8, Rule 12) BELOW it
+    // Sorted by ID descending so the most recent ones are higher up
+    otherBrokenRules.sort((a, b) => b.id - a.id).forEach(rule => {
+        renderCard(rule, false);
+    });
 }
 
 function renderCard(rule, isPinned) {
@@ -894,7 +903,7 @@ function startFinalButton() {
             btn.remove();
             validate();
         } else {
-            moveBtn();;
+            moveBtn();
         }
     };
 }
